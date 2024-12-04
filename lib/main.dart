@@ -1,5 +1,16 @@
 import 'package:flutter/material.dart';
 
+final GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
+
+Future<void> newPhoto() async {
+  await Future.delayed(const Duration(seconds: 1));
+  final context = navKey.currentContext;
+  if (!(context?.mounted ?? false)) {
+    return;
+  }
+  Navigator.of(context!).pop();
+}
+
 void main() {
   runApp(const MyApp());
 }
@@ -8,10 +19,12 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) => const MaterialApp(
-          home: MyHomePage(
-        title: 'Flutter Demo Home Page',
-      ));
+  Widget build(BuildContext context) => MaterialApp(
+        home: const MyHomePage(
+          title: 'Flutter Demo Home Page',
+        ),
+        navigatorKey: navKey,
+      );
 }
 
 class MyHomePage extends StatefulWidget {
@@ -30,27 +43,4 @@ class _MyHomePageState extends State<MyHomePage> {
           'You have pushed the button this many times:',
         ),
       );
-
-  Future<bool> test() async {
-    await Future.delayed(const Duration(seconds: 1));
-    return true;
-  }
-
-  Future<void> newPhoto() async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        actions: [
-          TextButton(
-            child: const Text('Choose a file'),
-            onPressed: () async {
-              if (await test() || !context.mounted) return;
-
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
-    );
-  }
 }
